@@ -23,8 +23,8 @@ export function TimelineRecords({ records, type }: { records: Record<string, unk
   if (!visible.length) return (
     <section className="panel p-4 sm:p-5">
       <Icon size={22} className="text-accent" aria-hidden="true" />
-      <h2 className="dashboard-heading mt-3">No published {type} records yet</h2>
-      <p className="mt-2 max-w-xl text-sm leading-6 text-secondary">Verified details will appear here when they are published. In the meantime, explore the portfolio’s public work or get in touch.</p>
+      <h2 className="dashboard-heading mt-3">{type === 'experience' ? 'No professional experience yet' : `No published ${type} records yet`}</h2>
+      <p className="mt-2 max-w-xl text-sm leading-6 text-secondary">{type === 'experience' ? 'I’m at the beginning of my professional journey, developing practical skills through coursework and personal projects.' : 'Verified details will appear here when they are published. In the meantime, explore the portfolio’s public work or get in touch.'}</p>
       <div className="mt-4 flex flex-wrap gap-2"><Link href="/projects" className="button-primary inline-flex min-h-11 items-center">Explore projects</Link><Link href="/contact" className="button-secondary inline-flex min-h-11 items-center">Get in touch</Link></div>
     </section>
   );

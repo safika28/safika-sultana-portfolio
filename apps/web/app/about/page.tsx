@@ -7,7 +7,7 @@ import { getPortfolioData } from '@/lib/portfolio-data';
 export const metadata: Metadata = { title: 'About', description: 'Meet Safika Sultana, a data scientist and developer based in Electronic City, Bengaluru.' };
 
 export default async function AboutPage() {
-  const { profile } = await getPortfolioData();
+  const { profile, content } = await getPortfolioData();
   return (
     <main className="dashboard-page space-y-4">
       <header><p className="eyebrow">The person behind the portfolio</p><h1 className="dashboard-heading">About Safika</h1></header>
@@ -27,7 +27,7 @@ export default async function AboutPage() {
         </div>
       </section>
       <section className="grid gap-2 sm:grid-cols-3" aria-label="Further information">
-        {[{ title: 'Experience', href: '/experience', description: 'Published roles and professional work.' }, { title: 'Education', href: '/education', description: 'Published qualifications and academic records.' }, { title: 'Certifications', href: '/certifications', description: 'Published credentials and verification links.' }].map((item) => <Link key={item.href} href={item.href} className="panel min-h-11 p-3 transition-colors hover:border-accent/50"><h2 className="flex items-center justify-between gap-2 text-sm font-semibold text-primary">{item.title}<ArrowUpRight size={14} className="text-accent" aria-hidden="true" /></h2><p className="mt-1 text-xs leading-5 text-secondary">{item.description}</p></Link>)}
+        {[{ title: 'Experience', href: '/experience', description: content.experience.length ? 'Professional roles and responsibilities.' : 'Starting my professional journey.' }, { title: 'Education', href: '/education', description: 'Published qualifications and academic records.' }, { title: 'Certifications', href: '/certifications', description: 'Published credentials and verification links.' }].map((item) => <Link key={item.href} href={item.href} className="panel min-h-11 p-3 transition-colors hover:border-accent/50"><h2 className="flex items-center justify-between gap-2 text-sm font-semibold text-primary">{item.title}<ArrowUpRight size={14} className="text-accent" aria-hidden="true" /></h2><p className="mt-1 text-xs leading-5 text-secondary">{item.description}</p></Link>)}
       </section>
     </main>
   );

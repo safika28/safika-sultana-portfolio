@@ -5,13 +5,6 @@ export const navItems = [
   { label: 'Skills', href: '#skills' }
 ];
 
-export const stats = [
-  { value: '6+', label: 'Years of insights & product work' },
-  { value: '28', label: 'Analyses and dashboards shipped' },
-  { value: '92%', label: 'Stakeholder satisfaction score' },
-  { value: '12', label: 'Cross-functional launches' }
-];
-
 export const skillGroups = [
   {
     title: 'Programming & analytics',
@@ -159,25 +152,4 @@ export const skillGroups = [
 ];
 
 export const skills = skillGroups.flatMap((group) => group.skills);
-
-export const experience = [
-  {
-    period: '2023 — Present',
-    role: 'Senior Data Analyst',
-    company: 'Independent consulting',
-    description: 'Partnering with product, marketing, and operations teams to turn ambiguity into measurable performance systems and executive decisions.'
-  },
-  {
-    period: '2021 — 2023',
-    role: 'Data Analyst',
-    company: 'Growth studio',
-    description: 'Delivered pipeline and customer insights, built recurring dashboards, and created segment logic to support acquisition strategy.'
-  },
-  {
-    period: '2019 — 2021',
-    role: 'Reporting Specialist',
-    company: 'Operations & strategy team',
-    description: 'Improved reporting accuracy, introduced KPI design standards, and built automation for weekly business reviews.'
-  }
-];
 
