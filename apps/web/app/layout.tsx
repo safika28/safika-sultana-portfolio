@@ -11,7 +11,6 @@ export const viewport: Viewport = { width: 'device-width', initialScale: 1, view
 export const metadata: Metadata = {
   title: { default: 'Safika Sultana | Data Scientist & Developer', template: '%s | Safika Sultana' },
   description: 'Explore Safika Sultana’s analytics, AI, and development portfolio, technologies, and public GitHub work.',
-  metadataBase: new URL('https://safika-sultana-portfolio.vercel.app'),
   icons: { icon: '/logo.png', apple: '/logo.png' },
 };
 

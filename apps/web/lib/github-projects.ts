@@ -126,9 +126,7 @@ export const githubProjectSnapshot: GitHubProject[] = Object.entries(projectDeta
     ...details,
     tags: [...details.tags],
     url: `${GITHUB_PROFILE_URL}/${name}`,
-    homepage: name === 'safika-sultana-portfolio'
-      ? 'https://safika-sultana-portfolio.vercel.app'
-      : null,
+    homepage: null,
     language: null,
     topics: [],
     stars: null,
@@ -136,7 +134,7 @@ export const githubProjectSnapshot: GitHubProject[] = Object.entries(projectDeta
     updatedAt: null,
     createdAt: null,
     size: null,
-    sourceStatus: null,
+    sourceStatus: name === 'safika-sultana-portfolio' ? 'available' : 'empty',
     metadataSource: 'snapshot',
   }),
 );
@@ -147,6 +145,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function validHomepage(value: unknown): string | null {
   if (typeof value !== 'string' || !value.trim()) return null;
+  // The repository's former public alias returned DEPLOYMENT_NOT_FOUND.
+  // A current live URL can be published through the CMS or GitHub metadata.
+  if (value.replace(/\/$/, '') === 'https://safika-sultana-portfolio.vercel.app') return null;
 
   try {
     const url = new URL(value);
