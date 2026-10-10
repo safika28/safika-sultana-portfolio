@@ -17,13 +17,14 @@ function credentialUrl(record: Record<string, unknown>, key = 'credentialUrl') {
   } catch { return null; }
 }
 
-export function TimelineRecords({ records, type }: { records: Record<string, unknown>[]; type: TimelineType }) {
+export function TimelineRecords({ records, type, headingLevel = 2 }: { records: Record<string, unknown>[]; type: TimelineType; headingLevel?: 2 | 3 }) {
   const Icon = type === 'experience' ? BriefcaseBusiness : type === 'education' ? GraduationCap : Award;
+  const Heading = headingLevel === 3 ? 'h3' : 'h2';
   const visible = records.filter((record) => value(record, 'title'));
   if (!visible.length) return (
     <section className="panel p-4 sm:p-5">
       <Icon size={22} className="text-accent" aria-hidden="true" />
-      <h2 className="dashboard-heading mt-3">{type === 'experience' ? 'No professional experience yet' : `No published ${type} records yet`}</h2>
+      <Heading className="dashboard-heading mt-3">{type === 'experience' ? 'No professional experience yet' : `No published ${type} records yet`}</Heading>
       <p className="mt-2 max-w-xl text-sm leading-6 text-secondary">{type === 'experience' ? 'I’m at the beginning of my professional journey, developing practical skills through coursework and personal projects.' : 'Verified details will appear here when they are published. In the meantime, explore the portfolio’s public work or get in touch.'}</p>
       <div className="mt-4 flex flex-wrap gap-2"><Link href="/projects" className="button-primary inline-flex min-h-11 items-center">Explore projects</Link><Link href="/contact" className="button-secondary inline-flex min-h-11 items-center">Get in touch</Link></div>
     </section>
@@ -48,7 +49,7 @@ export function TimelineRecords({ records, type }: { records: Record<string, unk
               {type === 'education' && <div className={`flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border p-1 sm:h-14 sm:w-14 ${logo ? 'bg-white' : 'bg-elevated'}`}>{logo ? <Image src={logo} alt={value(record, 'logoAlt') || `${organization} logo`} width={48} height={48} unoptimized={logo.startsWith('http') || value(record, 'logoFit') === 'cover'} className={`h-full w-full ${value(record, 'logoFit') === 'cover' ? 'object-cover object-center' : 'object-contain'}`} /> : <School size={24} className="text-accent" role="img" aria-label={`${organization} school icon`} />}</div>}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
-                  <h2 className="min-w-0 break-words text-sm font-semibold leading-5 text-primary">{title}</h2>
+                  <Heading className="min-w-0 break-words text-sm font-semibold leading-5 text-primary">{title}</Heading>
                   {dates && <p className="min-w-0 max-w-full break-words text-xs leading-5 text-accent">{dates}</p>}
                 </div>
                 {organization && <p className="mt-1 break-words text-[13px] text-secondary">{organization}</p>}
