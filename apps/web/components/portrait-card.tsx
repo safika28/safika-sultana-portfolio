@@ -4,18 +4,13 @@ import { Download, Linkedin } from 'lucide-react';
 type PortraitCardProps = {
   linkedInUrl: string | null;
   cvUrl: string | null;
-  followerCount: number | null;
 };
 
 const actionClassName = 'portrait-glass-action';
 const disabledActionClassName = 'portrait-glass-action portrait-glass-action-disabled';
-const iconClassName = 'h-3 w-3 shrink-0 md:h-4 md:w-4';
+const iconClassName = 'h-2.5 w-2.5 shrink-0 md:h-3 md:w-3';
 
-export function PortraitCard({ linkedInUrl, cvUrl, followerCount }: PortraitCardProps) {
-  const verifiedFollowerCount = followerCount !== null && Number.isSafeInteger(followerCount) && followerCount >= 0
-    ? followerCount.toLocaleString('en-US')
-    : null;
-
+export function PortraitCard({ linkedInUrl, cvUrl }: PortraitCardProps) {
   return (
     <div className="hero-portrait">
       <Image
@@ -52,12 +47,6 @@ export function PortraitCard({ linkedInUrl, cvUrl, followerCount }: PortraitCard
             </button>
           )}
         </div>
-        <p className="portrait-followers">
-          <span className="portrait-follower-count" aria-label={verifiedFollowerCount === null ? 'Follower count unavailable' : undefined}>
-            {verifiedFollowerCount ?? '—'}
-          </span>
-          <span>LinkedIn followers</span>
-        </p>
       </div>
     </div>
   );

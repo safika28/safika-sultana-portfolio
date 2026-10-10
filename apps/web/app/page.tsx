@@ -1,12 +1,13 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Mail, MapPin, Sparkles } from 'lucide-react';
+import { ArrowRight, Mail, MapPin, Phone, Sparkles } from 'lucide-react';
 import { CardCarousel } from '@/components/card-carousel';
 import { SkillIcon } from '@/components/content-icons';
 import { GitHubProjectCards, GitHubProjects } from '@/components/github-projects';
 import { PortraitCard } from '@/components/portrait-card';
 import { SectionHeading } from '@/components/section-heading';
+import { SkillsFrame } from '@/components/skills-frame';
 import { githubProjectSnapshot } from '@/lib/github-projects';
 import { profileContact } from '@/lib/profile-contact';
 import { experience, skillGroups, skills } from '@/lib/site-data';
@@ -37,15 +38,14 @@ export default function HomePage() {
                   Explore work
                   <ArrowRight size={16} />
                 </Link>
-                {profileContact.linkedInUrl ? (
-                  <a href={profileContact.linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="Contact Safika Sultana on LinkedIn (opens in a new tab)" className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-4 py-2.5 text-sm font-medium text-primary transition hover:-translate-y-0.5 hover:border-accent hover:text-accent">
-                    Contact
-                  </a>
-                ) : null}
+                <a href={profileContact.phoneHref} aria-label={`Call Safika Sultana at ${profileContact.phoneNumber}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-4 py-2.5 text-sm font-medium text-primary transition hover:-translate-y-0.5 hover:border-accent hover:text-accent">
+                  <Phone size={14} aria-hidden="true" />
+                  Contact
+                </a>
               </div>
               <div className="mt-4 flex flex-wrap gap-3 text-xs text-secondary md:mt-6">
-                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5"><MapPin size={14} className="text-accent" /> Based in Dhaka, Bangladesh</span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5"><Mail size={14} className="text-accent" /> hello@safikasultana.dev</span>
+                <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5"><MapPin size={14} className="shrink-0 text-accent" aria-hidden="true" /><span className="min-w-0">Based in {profileContact.location}</span></span>
+                <a href={`mailto:${profileContact.email}`} className="inline-flex max-w-full items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5 transition hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><Mail size={14} className="shrink-0 text-accent" aria-hidden="true" /><span className="min-w-0 break-all">{profileContact.email}</span></a>
               </div>
             </div>
           </div>
@@ -102,25 +102,19 @@ export default function HomePage() {
         </Suspense>
       </section>
 
-      <section className="container-shell scroll-mt-28 pb-20" id="skills">
-        <div className="panel p-5 md:p-8">
-          <SectionHeading compact eyebrow="Skills" title="Data, AI, and web development." />
-          <div className="mt-6 grid min-w-0 gap-7 md:grid-cols-2 md:gap-8">
-            {skillGroups.map((group) => (
-              <section key={group.title} aria-label={group.title} className="skill-group min-w-0 border-t border-border pt-5">
-                <h3 className="text-sm font-semibold text-primary">{group.title}</h3>
-                <div className="mt-3 flex min-w-0 flex-wrap gap-2">
-                  {group.skills.map((skill) => (
-                    <span key={skill} data-skill={skill} className="inline-flex max-w-full items-start gap-1.5 rounded-2xl border border-border bg-elevated px-2.5 py-1.5 text-xs leading-5 text-secondary">
-                      <SkillIcon label={skill} size={14} className="mt-[3px] text-accent" />
-                      <span className="min-w-0 break-words">{skill}</span>
-                    </span>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </div>
+      <section className="container-shell scroll-mt-28 pb-10 md:pb-12" id="skills">
+        <SkillsFrame groups={skillGroups.map((group) => ({ title: group.title, count: group.skills.length }))}>
+          {skillGroups.map((group) => (
+            <div key={group.title} className="skills-chip-list">
+              {group.skills.map((skill) => (
+                <span key={skill} data-skill={skill} className="skill-chip">
+                  <SkillIcon label={skill} size={12} className="mt-0.5 text-accent" />
+                  <span className="min-w-0 break-words">{skill}</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </SkillsFrame>
       </section>
     </main>
   );

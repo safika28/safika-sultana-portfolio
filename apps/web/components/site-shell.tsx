@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Menu } from 'lucide-react';
+import { SiteFooter } from '@/components/site-footer';
 import { profileContact } from '@/lib/profile-contact';
 import { navItems } from '@/lib/site-data';
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background text-primary">
+    <div id="top" className="min-h-screen bg-background text-primary">
       <header className="sticky top-0 z-40 border-b border-border/80 bg-background/70 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
           <Link href="/" aria-label="Safika Sultana home" className="inline-flex shrink-0 items-center gap-3 rounded-full font-heading text-2xl tracking-[0.16em] text-primary transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-background">
@@ -51,6 +52,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       {children}
+      <SiteFooter />
     </div>
   );
 }
