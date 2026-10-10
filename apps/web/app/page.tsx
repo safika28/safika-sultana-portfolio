@@ -1,170 +1,123 @@
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, BarChart3, Mail, MapPin, Sparkles } from 'lucide-react';
+import { ArrowRight, Mail, MapPin, Sparkles } from 'lucide-react';
+import { CardCarousel } from '@/components/card-carousel';
+import { SkillIcon } from '@/components/content-icons';
+import { GitHubProjectCards, GitHubProjects } from '@/components/github-projects';
+import { PortraitCard } from '@/components/portrait-card';
 import { SectionHeading } from '@/components/section-heading';
-import { experience, insights, navItems, projects, skills, stats } from '@/lib/site-data';
+import { githubProjectSnapshot } from '@/lib/github-projects';
+import { profileContact } from '@/lib/profile-contact';
+import { experience, skillGroups, skills } from '@/lib/site-data';
 
 export default function HomePage() {
   return (
     <main>
-      <section className="container-shell pb-20 pt-10 md:pb-28 md:pt-16">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+      <section className="container-shell pb-12 pt-8 md:pb-16 md:pt-10">
+        <div className="hero-layout grid grid-cols-[minmax(0,1.15fr)_minmax(0,0.95fr)] items-stretch gap-x-3 gap-y-5 sm:gap-x-6 md:grid-cols-[minmax(0,1fr)_14rem] md:gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_20rem]">
+          <div className="hero-content contents md:flex md:min-h-[25rem] md:min-w-0 md:flex-col md:justify-between">
+            <div className="col-span-2 md:col-span-1">
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-accent shadow-[0_0_18px_rgba(16,185,129,0.15)] sm:text-xs sm:tracking-[0.3em]">
+                <Sparkles size={14} className="shrink-0" />
+                Data analyst & developer
+              </div>
+            </div>
+            <div className="hero-copy flex min-h-[260px] min-w-0 flex-col justify-center md:min-h-0 md:flex-1">
+              <h1 className="font-heading text-[clamp(1.0625rem,4.4vw,1.1875rem)] leading-snug text-primary md:mt-5 md:text-[clamp(1.125rem,2vw,1.75rem)] lg:whitespace-nowrap">
+                Insightful analysis. Thoughtful product execution.
+              </h1>
+              <p className="mt-3 text-xs leading-5 text-secondary min-[375px]:text-[13px] md:text-sm md:leading-6">
+                I turn data into clear decisions through analytics and thoughtful product execution.
+              </p>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex flex-wrap gap-3 md:mt-6">
+                <Link href="#work" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent-hover px-4 py-2.5 text-sm font-medium text-background shadow-[0_0_30px_rgba(16,185,129,0.32)] transition hover:-translate-y-0.5 hover:shadow-[0_0_35px_rgba(16,185,129,0.4)]">
+                  Explore work
+                  <ArrowRight size={16} />
+                </Link>
+                {profileContact.linkedInUrl ? (
+                  <a href={profileContact.linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="Contact Safika Sultana on LinkedIn (opens in a new tab)" className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-4 py-2.5 text-sm font-medium text-primary transition hover:-translate-y-0.5 hover:border-accent hover:text-accent">
+                    Contact
+                  </a>
+                ) : null}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3 text-xs text-secondary md:mt-6">
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5"><MapPin size={14} className="text-accent" /> Based in Dhaka, Bangladesh</span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5"><Mail size={14} className="text-accent" /> hello@safikasultana.dev</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero-portrait-wrapper col-start-2 row-start-2 min-w-0 self-stretch md:col-auto md:row-auto">
+            <PortraitCard {...profileContact} />
+          </div>
+        </div>
+      </section>
+
+      <section className="container-shell scroll-mt-28 pb-12 md:pb-16" id="about">
+        <div className="panel flex flex-col gap-5 p-6 sm:flex-row sm:items-center md:p-8">
+          <Image src="/logo.png" alt="" width={80} height={80} sizes="80px" className="h-20 w-20 shrink-0 rounded-full border border-accent/50 bg-surface object-cover" />
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-accent shadow-[0_0_18px_rgba(16,185,129,0.15)]">
-              <Sparkles size={14} />
-              Data analyst & developer
-            </div>
-            <h1 className="mt-6 max-w-3xl font-heading text-5xl leading-none text-primary md:text-7xl">
-              Insightful analysis. Thoughtful product execution.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-secondary">
-              I help teams turn decision-making into a disciplined operating system—combining analytics, product thinking, and polished execution to uncover what matters and move faster with confidence.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="#work" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent-hover px-5 py-3 text-sm font-medium text-background shadow-[0_0_30px_rgba(16,185,129,0.32)] transition hover:-translate-y-0.5 hover:shadow-[0_0_35px_rgba(16,185,129,0.4)]">
-                Explore work
-                <ArrowRight size={16} />
-              </Link>
-              <Link href="#contact" className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-5 py-3 text-sm font-medium text-primary transition hover:-translate-y-0.5 hover:border-accent hover:text-accent">
-                Contact
-              </Link>
-            </div>
-            <div className="mt-10 flex flex-wrap gap-5 text-sm text-secondary">
-              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-2"><MapPin size={16} className="text-accent" /> Based in Dhaka, Bangladesh</span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-2"><Mail size={16} className="text-accent" /> hello@safikasultana.dev</span>
-            </div>
-          </div>
-
-          <div className="panel relative overflow-hidden p-4">
-            <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-[#0d211c] via-[#0a1d18] to-[#071a14] p-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
-              <div className="flex items-center justify-between border-b border-border pb-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-secondary">Portfolio snapshot</p>
-                  <h3 className="mt-2 font-heading text-2xl text-primary">Operations Pulse</h3>
-                </div>
-                <div className="rounded-full bg-success/15 px-2 py-1 text-xs text-success">+18.6% QoQ</div>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-4">
-                {stats.slice(0, 2).map((item) => (
-                  <div key={item.label} className="rounded-2xl border border-border bg-elevated/90 p-4 shadow-[0_0_18px_rgba(16,185,129,0.08)]">
-                    <p className="text-3xl font-bold text-primary">{item.value}</p>
-                    <p className="mt-2 text-sm text-secondary">{item.label}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 rounded-2xl border border-border bg-background/70 p-4 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-secondary"><BarChart3 size={14} className="text-accent" /> Revenue signal</div>
-                  <span className="text-xs text-success">Healthy</span>
-                </div>
-                <div className="mt-5 flex h-28 items-end gap-2">
-                  {[35, 48, 62, 70, 81, 74, 90].map((bar, idx) => (
-                    <span key={idx} className="w-full rounded-t-xl bg-gradient-to-t from-accent via-emerald-400 to-accent-hover shadow-[0_0_18px_rgba(16,185,129,0.25)]" style={{ height: `${bar}%` }} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container-shell pb-20" id="about">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="panel p-8">
-            <SectionHeading eyebrow="About" title="Data that informs decisions, not just reports." />
-          </div>
-          <div className="space-y-6 text-lg leading-8 text-secondary">
-            <p>
-              I work at the intersection of analysis, strategy, and product delivery—building trusted metrics, translating complexity into clarity, and helping teams focus on the levers that actually move outcomes.
-            </p>
-            <p>
-              My work ranges from dashboard design and SQL modeling to experimentation support and KPI architecture. I believe good analytics should feel as intentional as the business decision it supports.
+            <p className="text-xs font-medium uppercase tracking-[0.25em] text-accent">About</p>
+            <h2 className="mt-2 font-heading text-xl text-primary md:text-2xl">Clear data. Better decisions.</h2>
+            <p className="mt-2 text-sm leading-6 text-secondary">
+              I build dashboards, trusted metrics, and practical insights that help teams act with confidence.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="container-shell pb-20" id="experience">
-        <SectionHeading eyebrow="Experience" title="A track record of measurable clarity." description="Across product, operations, and reporting, I build systems that make performance easier to understand and act upon." />
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+      <section className="container-shell scroll-mt-28 pb-12 md:pb-16" id="experience">
+        <SectionHeading compact eyebrow="Experience" title="A track record of measurable clarity." description="Analytics, reporting, and practical product thinking." />
+        <CardCarousel label="Experience">
           {experience.map((item) => (
-            <article key={item.period} className="panel p-6">
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">{item.period}</p>
-              <h3 className="mt-4 text-2xl text-primary">{item.role}</h3>
-              <p className="mt-2 text-sm uppercase tracking-[0.18em] text-secondary">{item.company}</p>
-              <p className="mt-5 text-base leading-7 text-secondary">{item.description}</p>
+            <article key={item.period} className="panel rounded-2xl p-4">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-accent">{item.period}</p>
+              <h3 className="mt-3 text-lg leading-6 text-primary">{item.role}</h3>
+              <p className="mt-1 text-[11px] uppercase leading-5 tracking-[0.1em] text-secondary">{item.company}</p>
+              <p className="mt-3 text-xs leading-5 text-secondary">{item.description}</p>
             </article>
           ))}
-        </div>
+          <article className="panel rounded-2xl p-4">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-accent">Skills summary</p>
+            <h3 className="mt-3 text-lg leading-6 text-primary">Tools behind the insights</h3>
+            <p className="mt-3 text-xs leading-5 text-secondary">A practical toolkit for analysis, reporting, and clear data storytelling.</p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {skills.slice(0, 5).map((skill) => (
+                <span key={skill} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-elevated px-2 py-1 text-[10px] text-secondary">
+                  <SkillIcon label={skill} size={12} className="text-accent" />
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </article>
+        </CardCarousel>
       </section>
 
-      <section className="container-shell pb-20" id="work">
-        <SectionHeading eyebrow="Selected work" title="Work shaped by business context and technical rigor." description="A blend of analytics, system thinking, and data-driven storytelling." />
-        <div className="mt-10 grid gap-8 lg:grid-cols-3">
-          {projects.map((project) => (
-            <article key={project.title} className="panel overflow-hidden">
-              <div className="relative h-64 w-full">
-                <Image src={project.image} alt={project.title} fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="rounded-full border border-border bg-elevated px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-secondary">
-                      {tag}
+      <section className="container-shell scroll-mt-28 pb-12 md:pb-16" id="work">
+        <Suspense fallback={<GitHubProjectCards projects={githubProjectSnapshot} />}>
+          <GitHubProjects />
+        </Suspense>
+      </section>
+
+      <section className="container-shell scroll-mt-28 pb-20" id="skills">
+        <div className="panel p-5 md:p-8">
+          <SectionHeading compact eyebrow="Skills" title="Data, AI, and web development." />
+          <div className="mt-6 grid min-w-0 gap-7 md:grid-cols-2 md:gap-8">
+            {skillGroups.map((group) => (
+              <section key={group.title} aria-label={group.title} className="skill-group min-w-0 border-t border-border pt-5">
+                <h3 className="text-sm font-semibold text-primary">{group.title}</h3>
+                <div className="mt-3 flex min-w-0 flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <span key={skill} data-skill={skill} className="inline-flex max-w-full items-start gap-1.5 rounded-2xl border border-border bg-elevated px-2.5 py-1.5 text-xs leading-5 text-secondary">
+                      <SkillIcon label={skill} size={14} className="mt-[3px] text-accent" />
+                      <span className="min-w-0 break-words">{skill}</span>
                     </span>
                   ))}
                 </div>
-                <h3 className="mt-5 text-2xl text-primary">{project.title}</h3>
-                <p className="mt-4 text-base leading-7 text-secondary">{project.summary}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="container-shell pb-20" id="insights">
-        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          <SectionHeading eyebrow="Insights" title="Writing that connects analysis to action." description="Short reflections on thoughtful measurement, better reporting, and decision systems that scale." />
-          <div className="grid gap-5">
-            {insights.map((item) => (
-              <article key={item.title} className="panel p-6">
-                <p className="text-xs uppercase tracking-[0.28em] text-accent">Article</p>
-                <h3 className="mt-4 text-2xl text-primary">{item.title}</h3>
-                <p className="mt-4 text-base leading-7 text-secondary">{item.excerpt}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="container-shell pb-24" id="contact">
-        <div className="panel p-8 md:p-12">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-accent">Let’s connect</p>
-              <h2 className="mt-4 font-heading text-4xl text-primary md:text-5xl">I build clarity for teams that need to make smarter decisions.</h2>
-            </div>
-            <div className="space-y-6">
-              <p className="text-lg leading-8 text-secondary">
-                Whether you need analytics leadership, dashboard systems, or product-facing insights, I can help shape a measurement strategy that stays useful as the business grows.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link href="mailto:hello@safikasultana.dev" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-background transition hover:bg-accent-hover">hello@safikasultana.dev</Link>
-                <Link href="https://www.linkedin.com" className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-medium text-primary transition hover:border-accent hover:text-accent">LinkedIn</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container-shell pb-20">
-        <div className="panel p-8">
-          <SectionHeading eyebrow="Core capabilities" title="Technology and analysis tools that support decisions." />
-          <div className="mt-8 flex flex-wrap gap-3">
-            {skills.map((skill) => (
-              <span key={skill} className="rounded-full border border-border bg-elevated px-3 py-2 text-sm text-secondary">
-                {skill}
-              </span>
+              </section>
             ))}
           </div>
         </div>

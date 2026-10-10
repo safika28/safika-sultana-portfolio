@@ -2,8 +2,7 @@ export const navItems = [
   { label: 'About', href: '#about' },
   { label: 'Experience', href: '#experience' },
   { label: 'Work', href: '#work' },
-  { label: 'Insights', href: '#insights' },
-  { label: 'Contact', href: '#contact' }
+  { label: 'Skills', href: '#skills' }
 ];
 
 export const stats = [
@@ -13,39 +12,153 @@ export const stats = [
   { value: '12', label: 'Cross-functional launches' }
 ];
 
-export const skills = [
-  'SQL & PostgreSQL',
-  'Python',
-  'Power BI',
-  'Tableau',
-  'Excel',
-  'Analytics Engineering',
-  'A/B Testing',
-  'Data Storytelling',
-  'ETL Pipelines',
-  'Metrics Design'
-];
-
-export const projects = [
+export const skillGroups = [
   {
-    title: 'Executive Visibility Dashboard',
-    summary: 'Built a KPI command center for leadership using warehouse data, stakeholder-friendly visual narratives, and automated refresh pipelines.',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-    tags: ['Power BI', 'SQL', 'Leadership Reporting']
+    title: 'Programming & analytics',
+    skills: [
+      'Python',
+      'SQL',
+      'NumPy',
+      'Pandas',
+      'Matplotlib',
+      'Seaborn',
+      'Microsoft Excel',
+      'Power BI',
+      'Jupyter Notebook',
+      'Google Colab',
+      'Statistics',
+      'Probability',
+      'Linear Algebra',
+      'Calculus',
+      'Hypothesis Testing',
+      'A/B Testing',
+      'Exploratory Data Analysis (EDA)',
+      'Data Cleaning',
+      'Data Preprocessing',
+      'Data Visualization',
+      'Business Analytics',
+      'Data Storytelling'
+    ]
   },
   {
-    title: 'Retention Analysis Workflow',
-    summary: 'Mapped churn drivers across funnel stages, surfacing disciplined intervention opportunities and validation criteria for the product team.',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
-    tags: ['Cohort Analysis', 'Python', 'Experiment Design']
+    title: 'Machine learning',
+    skills: [
+      'Feature Engineering',
+      'Machine Learning',
+      'Scikit-learn',
+      'Supervised Learning',
+      'Unsupervised Learning',
+      'Regression',
+      'Classification',
+      'Clustering',
+      'Random Forest',
+      'Decision Trees',
+      'XGBoost',
+      'LightGBM',
+      'Time Series Forecasting',
+      'Model Evaluation',
+      'Hyperparameter Tuning',
+      'SHAP'
+    ]
   },
   {
-    title: 'Forecasting and Planning Suite',
-    summary: 'Developed weekly planning metrics, occupancy models, and anomaly alerts that reduced reporting latency and improved executive confidence.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-    tags: ['Forecasting', 'Excel', 'Operations']
+    title: 'AI & deep learning',
+    skills: [
+      'Deep Learning',
+      'Neural Networks',
+      'TensorFlow',
+      'Keras',
+      'PyTorch',
+      'Natural Language Processing (NLP)',
+      'Computer Vision',
+      'Transformers',
+      'Hugging Face',
+      'Generative AI',
+      'Large Language Models (LLMs)',
+      'Prompt Engineering',
+      'Retrieval-Augmented Generation (RAG)',
+      'Vector Databases',
+      'Embeddings',
+      'LangChain'
+    ]
+  },
+  {
+    title: 'Data platforms & engineering',
+    skills: [
+      'PostgreSQL',
+      'MySQL',
+      'MongoDB',
+      'Apache Spark',
+      'PySpark',
+      'Apache Airflow',
+      'ETL',
+      'Data Warehousing',
+      'BigQuery',
+      'Snowflake',
+      'Database Design',
+      'Database Migrations'
+    ]
+  },
+  {
+    title: 'Web development & design',
+    skills: [
+      'HTML5',
+      'CSS3',
+      'JavaScript',
+      'TypeScript',
+      'React.js',
+      'Next.js',
+      'Node.js',
+      'Express.js',
+      'NestJS',
+      'Tailwind CSS',
+      'Bootstrap',
+      'shadcn/ui',
+      'Material UI',
+      'Responsive Web Design',
+      'UI/UX Design',
+      'Figma',
+      'CSS'
+    ]
+  },
+  {
+    title: 'APIs & security',
+    skills: [
+      'FastAPI',
+      'API Integration',
+      'Authentication',
+      'Authorization',
+      'OAuth',
+      'Webhooks',
+      'Supabase',
+      'Row Level Security',
+      'OpenAPI'
+    ]
+  },
+  {
+    title: 'Cloud & deployment',
+    skills: [
+      'Streamlit',
+      'Docker',
+      'MLflow',
+      'MLOps',
+      'Git',
+      'GitHub',
+      'GitHub Actions',
+      'CI/CD',
+      'AWS',
+      'Azure',
+      'Google Cloud',
+      'Model Deployment',
+      'Model Monitoring',
+      'Vercel',
+      'Render',
+      'Codex'
+    ]
   }
 ];
+
+export const skills = skillGroups.flatMap((group) => group.skills);
 
 export const experience = [
   {
@@ -68,17 +181,3 @@ export const experience = [
   }
 ];
 
-export const insights = [
-  {
-    title: 'Designing better decision loops',
-    excerpt: 'How to structure metrics that guide action while remaining understandable to stakeholders across the organization.'
-  },
-  {
-    title: 'Turning raw events into product thinking',
-    excerpt: 'A practical framework for making operational data useful in roadmap decisions and customer interviews.'
-  },
-  {
-    title: 'What quality reporting actually requires',
-    excerpt: 'The systems, scoping rules, and feedback loops that keep dashboards reliable as organizations grow.'
-  }
-];
