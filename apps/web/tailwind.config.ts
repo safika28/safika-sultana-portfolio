@@ -5,22 +5,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#071A14',
-        surface: '#0D221C',
-        elevated: '#123228',
-        primary: '#FFFFFF',
-        secondary: '#D1D5DB',
-        accent: '#10B981',
-        'accent-hover': '#6EE7B7',
-        border: '#1F3A33',
-        danger: '#F87171',
-        success: '#34D399'
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        elevated: 'rgb(var(--color-elevated) / <alpha-value>)',
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        danger: 'rgb(var(--color-danger) / <alpha-value>)',
+        success: 'rgb(var(--color-success) / <alpha-value>)'
       },
       boxShadow: {
         glow: '0 0 0 1px rgba(110,231,183,0.18), 0 20px 45px rgba(0, 0, 0, 0.35), 0 0 30px rgba(16,185,129,0.18)'
       },
       fontFamily: {
-        heading: ['var(--font-playfair)', 'serif'],
+        heading: ['var(--font-inter)', 'sans-serif'],
         body: ['var(--font-inter)', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'monospace']
       }

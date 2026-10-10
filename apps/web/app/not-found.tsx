@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function NotFound() { return <main className="dashboard-page"><section className="panel p-5"><p className="eyebrow">404</p><h1 className="dashboard-heading">This page isn’t available.</h1><p className="my-3 text-sm">Explore the project directory or return to the workspace.</p><div className="flex flex-wrap gap-2"><Link href="/projects" className="button-primary">View projects</Link><Link href="/" className="button-secondary">Go home</Link></div></section></main>; }

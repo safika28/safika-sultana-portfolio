@@ -35,7 +35,7 @@ export function CardCarousel({ label, children }: { label: string; children: Rea
     if (!track) return;
 
     const card = track.firstElementChild;
-    const step = (card?.getBoundingClientRect().width ?? track.clientWidth) + 16;
+    const step = (card?.getBoundingClientRect().width ?? track.clientWidth) + 12;
     const left = edge === 'start' ? 0 : edge === 'end' ? track.scrollWidth : track.scrollLeft + direction * step;
     track.scrollTo({
       left,
