@@ -23,7 +23,7 @@ const fieldHelp: Record<Section, string> = {
   skills: 'Give the category a title and add skill names to the skills array. Optional description explains evidence or scope.',
   projects: 'Optional fields: githubUrl, liveUrl, imageUrl, url, featured, complexity, dataset, cleaning, analysis, features, modeling, evaluation, impact, limitations, deployment. Each metric needs name, numeric value, methodology, and dataset; unit is optional. Visualizations need title and description, with optional imageUrl and sourceUrl.',
   experience: 'Use title, organization, dates, description, and optional tags. Publish only verified experience.',
-  education: 'Use title, institution, dates, and optional description and credentialUrl.',
+  education: 'Use title, institution, dates, and optional grade, status, logoUrl, logoAlt, logoFit, description, and credentialUrl.',
   certifications: 'Use title and organization, with optional dates, description, credentialUrl, and documentUrl.',
   posts: 'Use title, slug, category, summary, body, and tags. Optional publishedAt uses an ISO date. Content is displayed as plain text.',
   settings: 'Control theme (dark, light, system), showKpis, featuredOrder (project slugs), and navigation (label and local href). Settings require the super_admin role.'

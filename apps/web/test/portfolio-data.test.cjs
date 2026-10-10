@@ -66,7 +66,12 @@ test('an empty CMS preserves the owner supplied contact details and all 108 uniq
   const skills = result.skillGroups.flatMap((group) => group.skills);
   assert.equal(skills.length, 108); assert.equal(new Set(skills).size, 108);
   for (const skill of ['Python', 'SQL', 'PyTorch', 'Next.js', 'Supabase', 'Codex']) assert.ok(skills.includes(skill));
-  assert.deepEqual(result.content.experience, []); assert.deepEqual(result.content.education, []);
+  assert.deepEqual(result.content.experience, []);
+  assert.equal(result.content.education.length, 3);
+  const [degree, higherSecondary, secondary] = result.content.education;
+  assert.equal(degree.dates, '2023–2027'); assert.equal(degree.status, 'In progress'); assert.equal(degree.grade, undefined);
+  assert.equal(higherSecondary.institution, 'Ramanujan Junior College, Nagaon'); assert.equal(higherSecondary.dates, '2022'); assert.equal(higherSecondary.grade, '78%');
+  assert.equal(secondary.institution, 'Adarsha Vidyalaya, Dhing'); assert.equal(secondary.dates, '2020'); assert.equal(secondary.grade, '86%');
 });
 
 test('duplicate published skill categories combine their skills in one visitor category', async () => {
@@ -93,4 +98,15 @@ test('supplied certificates stay visible and a published update retains its orig
   assert.equal(certificate.credentialUrl, 'https://coursera.org/share/bd8f78c3f59d26a370735caace008dde');
   assert.ok(result.content.certifications.some(record => record.title === '100 Days of Code: The Complete Python Pro Bootcamp'));
   assert.ok(result.content.certifications.some(record => record.title === 'Data Analyst Skillpath: Zero to Hero in Excel, SQL & Python'));
+});
+
+test('published education updates retain supplied marks and local logos without duplicating qualifications', async () => {
+  const content = { ...emptyContent(), source: 'database', education: [{ id: 'cms-education', title: 'Class 12 · Higher Secondary', institution: 'Ramanujan Junior College, Nagaon', dates: '2022', description: 'Updated owner description.' }] };
+  const result = await bridge(content, [])();
+  assert.equal(result.content.education.length, 3);
+  const school = result.content.education.find(record => record.institution === 'Ramanujan Junior College, Nagaon');
+  assert.equal(school.description, 'Updated owner description.');
+  assert.equal(school.grade, '78%');
+  assert.equal(school.logoUrl, '/institutions/ramanujan.png');
+  assert.equal(school.logoFit, 'cover');
 });

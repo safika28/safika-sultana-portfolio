@@ -1,0 +1,5 @@
+Institution assets checked on 11 October 2026. Academic dates and marks come from the portfolio owner.
+
+- `dibru.png`: unchanged [Dibrugarh University seal](https://www.dibru.ac.in/assets/image/main-logo-small.png), linked from the [official DUIET page](https://www.dibru.ac.in/duiet).
+- `ramanujan.png`: unchanged [Ramanujan Junior College header](https://ramanujanjuniorcollege.com/images/Header.png). The card displays its centered seal through CSS. An [official 2022 notice](https://www.ramanujanjuniorcollege.com/news/415.pdf) uses the Junior College name; current notices also use Ramanujan Senior Secondary School.
+- Adarsha Vidyalaya, Dhing: a neutral Lucide `School` icon is used until a correct crest is supplied. No institution-specific logo was verified. The [Batadrava school website](https://avbatadrava.in/) displays a badge naming Mazbat; it was excluded. [Adarsha Vidyalaya Sangathan Assam](https://avs.assam.gov.in/) uses a government emblem, which was not presented as a Dhing school crest.

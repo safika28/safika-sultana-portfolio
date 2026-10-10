@@ -5,6 +5,7 @@ import { getGitHubProjects, GITHUB_PROFILE_URL, projectCategories, type GitHubPr
 import { profileContact } from './profile-contact';
 import { skillGroups as defaultSkillGroups } from './site-data';
 import { suppliedCertifications } from './certifications';
+import { suppliedEducation } from './education';
 
 export type PortfolioProfile = {
   name: string; title: string; bio: string; about: string; location: string;
@@ -29,6 +30,12 @@ export const getPortfolioData = cache(async () => {
     credentials.set(key, { ...credentials.get(key), ...record });
   }
   content.certifications = Array.from(credentials.values());
+  const education = new Map(suppliedEducation.map(record => [`${record.institution}|${record.title}`.toLowerCase(), { ...record }]));
+  for (const record of content.education) {
+    const key = `${record.institution}|${record.title}`.toLowerCase();
+    education.set(key, { ...education.get(key), ...record });
+  }
+  content.education = Array.from(education.values());
   const profile = { ...defaults };
   if (content.profile) {
     for (const key of Object.keys(defaults) as (keyof PortfolioProfile)[]) {

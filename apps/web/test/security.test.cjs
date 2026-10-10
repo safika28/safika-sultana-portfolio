@@ -49,6 +49,12 @@ test('CMS rejects script URLs and invented metric records without methodology', 
   assert.throws(() => validateContent({ section: 'projects', published: true, position: 0, payload: { title: 'Test', slug: 'test', summary: 'Test case', category: 'Machine Learning', tags: [], metrics: [{ name: 'Accuracy', value: 95 }] } }), { status: 400 });
   assert.throws(() => validateContent({ section: 'profile', published: true, position: 0, payload: { name: 'Owner', title: 'Title', bio: '', role: 'super_admin' } }), { status: 400 });
 });
+
+test('education accepts academic details and rejects unsafe institution logos', () => {
+  const input = { section: 'education', published: true, position: 0, payload: { title: 'Class 12', institution: 'Ramanujan Junior College, Nagaon', dates: '2022', grade: '78%', status: 'Completed', logoUrl: '/institutions/ramanujan.png', logoAlt: 'Ramanujan seal', logoFit: 'cover' } };
+  assert.equal(validateContent(input).payload.logoUrl, '/institutions/ramanujan.png');
+  assert.throws(() => validateContent({ ...input, payload: { ...input.payload, logoUrl: 'javascript:alert(1)' } }), { status: 400 });
+});
 test('bounded JSON parser rejects content type and streamed oversized bodies', async () => {
   await assert.rejects(() => readJsonBody(new Request('http://localhost/api', { method: 'POST', body: '{}' })), { status: 415 });
   await assert.rejects(() => readJsonBody(new Request('http://localhost/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: 'x'.repeat(20) }), 10), { status: 413 });
