@@ -19,7 +19,7 @@ export default async function ProjectsPage() {
       <div><p className="eyebrow">Project explorer</p><h1 className="dashboard-heading">From business questions to source code.</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-secondary">Explore {projects.length} projects and public repositories by scope, technology, and source availability.</p></div>
       <a href={GITHUB_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="button-secondary inline-flex min-h-11 items-center gap-2 px-3 text-xs"><Github size={15} aria-hidden="true" />GitHub profile<ArrowUpRight size={13} aria-hidden="true" /></a>
     </header>
-    {hasSnapshotMetadata ? <p className="panel border-amber-400/25 px-3 py-2 text-xs leading-5 text-secondary" role="status">GitHub is temporarily unavailable. Showing the last verified repository list; current language, stars, forks, dates, and source status are unavailable.</p> : null}
+    {hasSnapshotMetadata ? <p className="panel border-sage/40 px-3 py-2 text-xs leading-5 text-secondary" role="status">GitHub is temporarily unavailable. Showing the last verified repository list; current language, stars, forks, dates, and source status are unavailable.</p> : null}
     <Suspense fallback={<div className="panel animate-pulse p-4 text-sm text-secondary" role="status">Loading project filters…</div>}><ProjectExplorer projects={projects} categories={projectCategories} /></Suspense>
   </main>;
 }

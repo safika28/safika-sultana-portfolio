@@ -125,7 +125,7 @@ export function AnalyticsWorkspace({ projects, skillGroups }: {
           <h1 className="dashboard-heading">Analytics workspace</h1>
           <p className="mt-1 max-w-2xl text-sm text-secondary">Explore public repository metadata and the skills listed in this portfolio.</p>
         </div>
-        <span className="chip inline-flex items-center gap-1.5"><Database size={13} aria-hidden="true" />Public portfolio records</span>
+        <span className="chip inline-flex items-center gap-1.5"><Database size={13} className="text-mint" aria-hidden="true" />Public portfolio records</span>
       </header>
 
       <section className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Selected dataset overview">
@@ -192,7 +192,7 @@ export function AnalyticsWorkspace({ projects, skillGroups }: {
 
         <div className="grid content-start gap-3">
           <section className="panel p-3 sm:p-4" aria-labelledby="analytics-insights-title">
-            <h2 id="analytics-insights-title" className="dashboard-heading flex items-center gap-2"><Lightbulb size={17} className="text-[#A78BFA]" aria-hidden="true" />Data-supported observations</h2>
+            <h2 id="analytics-insights-title" className="dashboard-heading flex items-center gap-2"><Lightbulb size={17} className="shrink-0 text-leaf" aria-hidden="true" />Data-supported observations</h2>
             <ul className="mt-3 space-y-3 text-sm leading-5">
               <li>{leadingGroup ? <><strong className="text-primary">{leadingGroup.label}</strong> has the largest count in this view: <strong className="text-accent">{leadingGroup.count}</strong>.</> : 'No records match the current selection. Clear filters to restore the overview.'}</li>
               {dataset === 'repositories' ? <>
@@ -207,7 +207,7 @@ export function AnalyticsWorkspace({ projects, skillGroups }: {
           </section>
 
           <section className="panel p-3 sm:p-4" aria-labelledby="analytics-model-title">
-            <h2 id="analytics-model-title" className="dashboard-heading flex items-center gap-2"><FlaskConical size={17} className="text-[#A78BFA]" aria-hidden="true" />Model evaluation</h2>
+            <h2 id="analytics-model-title" className="dashboard-heading flex items-center gap-2"><FlaskConical size={17} className="shrink-0 text-leaf" aria-hidden="true" />Model evaluation</h2>
             {evaluatedProjects.length ? <div className="mt-3 space-y-3">
               {evaluatedProjects.map((project) => <details key={project.name} className="rounded-lg border border-border px-3">
                 <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium text-primary">{project.title}</summary>

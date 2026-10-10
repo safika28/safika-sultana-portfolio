@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, Award, Code2, Download, FolderGit2, Github, Linkedin, MapPin, Phone, ScanLine } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Award, Code2, FolderGit2, Github, MapPin, Phone, ScanLine } from 'lucide-react';
+import { PortraitCard } from '@/components/portrait-card';
 import { SkillsFrame } from '@/components/skills-frame';
 import { CardCarousel } from '@/components/card-carousel';
 import { LazyPortfolioChart } from '@/components/lazy-portfolio-chart';
@@ -13,20 +14,18 @@ export default async function HomePage() {
  const studies = projects.filter(project => project.published && Object.values(project.caseStudy || {}).some(Boolean)).length;
  const kpis = [
   {label:'Public repositories',value:projects.filter(project => project.url.startsWith('https://github.com/safika28/')).length,caption:projects.some(project => project.metadataSource==='github')?'GitHub · live metadata':'GitHub · saved inventory',Icon:FolderGit2,color:'text-accent'},
-  {label:'Technologies & skills',value:uniqueSkills,caption:'Owner-listed toolkit',Icon:Code2,color:'text-violet-400'},
-  {label:'Published case studies',value:content.source==='database'?studies:'—',caption:studies?'Published CMS records':'Details awaiting publication',Icon:ScanLine,color:'text-blue-400'},
-  {label:'Certifications',value:content.certifications.length,caption:'Documented course completions',Icon:Award,color:'text-emerald-400'}
+  {label:'Technologies & skills',value:uniqueSkills,caption:'Owner-listed toolkit',Icon:Code2,color:'text-leaf'},
+  {label:'Published case studies',value:content.source==='database'?studies:'—',caption:studies?'Published CMS records':'Details awaiting publication',Icon:ScanLine,color:'text-mint'},
+  {label:'Certifications',value:content.certifications.length,caption:'Documented course completions',Icon:Award,color:'text-sage'}
  ];
  const order = Array.isArray(content.settings?.featuredOrder) ? (content.settings.featuredOrder as string[]).map(name=>name.toLowerCase()) : [];
  const rank = (name:string) => { const index=order.indexOf(name.toLowerCase()); return index<0 ? Infinity : index; };
  const featured = [...projects].sort((a,b)=>rank(a.name)-rank(b.name)||Number(b.featured===true)-Number(a.featured===true)||Number(b.sourceStatus==='available')-Number(a.sourceStatus==='available')||Number(Boolean(b.homepage))-Number(Boolean(a.homepage))).slice(0,4);
  return <main className="dashboard-page">
   <section className="panel overflow-hidden p-3 sm:p-4" aria-labelledby="identity-title">
-   <div className="mb-3 flex items-center justify-between gap-2"><p className="eyebrow mb-0">Analytics · AI · Development</p><span className="flex items-center gap-1.5 text-[10px] text-secondary"><span className="h-1.5 w-1.5 rounded-full bg-accent" />Personal workspace</span></div>
-   <div className="grid min-w-0 grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] items-stretch gap-3 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
-    <div className="identity-photo"><Image src={profile.photoUrl} alt={`Portrait of ${profile.name}`} fill priority unoptimized={profile.photoUrl.startsWith('http')} sizes="(max-width:639px) 40vw,200px" />
-     <div className="identity-glass">{profile.linkedInUrl&&<a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)"><Linkedin size={13} aria-hidden="true" /><span className="hidden min-[360px]:inline">LinkedIn</span></a>}{profile.cvUrl?<a href={profile.cvUrl} download aria-label="Download CV"><Download size={13} aria-hidden="true" />CV</a>:<button type="button" disabled aria-label="CV download unavailable" title="CV file has not been supplied"><Download size={13} aria-hidden="true" />CV</button>}</div>
-    </div>
+   <div className="mb-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1"><p className="eyebrow mb-0">Analytics · AI · Development</p><span className="flex items-center gap-1.5 text-[10px] text-secondary"><span className="h-1.5 w-1.5 rounded-full bg-accent" />Personal workspace</span></div>
+   <div className="identity-grid">
+    <PortraitCard photoUrl={profile.photoUrl} name={profile.name} linkedInUrl={profile.linkedInUrl} cvUrl={profile.cvUrl} />
     <div className="flex min-w-0 flex-col justify-center">
      <h1 id="identity-title" className="text-[26px] font-semibold leading-[1.06] sm:text-[32px] lg:text-[34px]">{profile.name}</h1>
      <p className="mt-2 text-[12px] font-medium text-accent sm:text-sm">{profile.title}</p>

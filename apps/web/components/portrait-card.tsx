@@ -2,51 +2,49 @@ import Image from 'next/image';
 import { Download, Linkedin } from 'lucide-react';
 
 type PortraitCardProps = {
+  photoUrl: string;
+  name: string;
   linkedInUrl: string | null;
   cvUrl: string | null;
 };
 
 const actionClassName = 'portrait-glass-action';
-const disabledActionClassName = 'portrait-glass-action portrait-glass-action-disabled';
-const iconClassName = 'h-2.5 w-2.5 shrink-0 md:h-3 md:w-3';
+const iconClassName = 'shrink-0';
 
-export function PortraitCard({ linkedInUrl, cvUrl }: PortraitCardProps) {
+export function PortraitCard({ photoUrl, name, linkedInUrl, cvUrl }: PortraitCardProps) {
   return (
-    <div className="hero-portrait">
+    <div className="identity-photo">
       <Image
-        src="/home-portrait.png"
-        alt="Safika Sultana in a black blazer and beige trousers"
-        width={1024}
-        height={1536}
-        sizes="(min-width: 1280px) 320px, (min-width: 1024px) 288px, (min-width: 768px) 224px, calc(45vw - 27px)"
+        src={photoUrl}
+        alt={`Portrait of ${name}`}
+        fill
+        sizes="(min-width: 1024px) 200px, (min-width: 640px) 176px, 40vw"
         priority
-        className="hero-portrait-image"
+        unoptimized={photoUrl.startsWith('http')}
       />
-      <div className="portrait-glass-panel">
-        <div className="portrait-glass-actions">
+      <div className="identity-glass" role="group" aria-label="Profile links">
           {linkedInUrl ? (
-            <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="Safika Sultana on LinkedIn (opens in a new tab)" className={actionClassName}>
+            <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label={`${name} on LinkedIn (opens in a new tab)`} className={actionClassName}>
               <Linkedin className={iconClassName} aria-hidden="true" />
-              LinkedIn
+              <span>LinkedIn</span>
             </a>
           ) : (
-            <button type="button" disabled aria-label="LinkedIn profile unavailable" className={disabledActionClassName}>
+            <button type="button" disabled aria-label="LinkedIn profile unavailable" className={actionClassName}>
               <Linkedin className={iconClassName} aria-hidden="true" />
-              LinkedIn
+              <span>LinkedIn</span>
             </button>
           )}
           {cvUrl ? (
-            <a href={cvUrl} download aria-label="Download Safika Sultana's CV" className={actionClassName}>
+            <a href={cvUrl} download aria-label={`Download ${name}'s CV`} className={actionClassName}>
               <Download className={iconClassName} aria-hidden="true" />
-              Download CV
+              <span>CV</span>
             </a>
           ) : (
-            <button type="button" disabled aria-label="CV download unavailable" className={disabledActionClassName}>
+            <button type="button" disabled aria-label="CV download unavailable" title="CV file has not been supplied" className={actionClassName}>
               <Download className={iconClassName} aria-hidden="true" />
-              Download CV
+              <span>CV</span>
             </button>
           )}
-        </div>
       </div>
     </div>
   );

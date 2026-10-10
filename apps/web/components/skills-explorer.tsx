@@ -14,12 +14,12 @@ function normalizeTechnology(value: string): string {
   return aliases[normalized] ?? normalized;
 }
 
-const brandColors: Record<string, string> = {
-  Python: '#60A5FA', SQL: '#22D3EE', Pandas: '#A78BFA', NumPy: '#60A5FA',
-  'Power BI': '#FBBF24', TypeScript: '#60A5FA', JavaScript: '#FBBF24',
-  'React.js': '#22D3EE', 'Next.js': '#94A3B8', Docker: '#60A5FA',
-  PostgreSQL: '#60A5FA', Supabase: '#34D399', TensorFlow: '#FB923C',
-  PyTorch: '#FB923C', MongoDB: '#34D399', 'Hugging Face': '#FBBF24',
+const skillIconColors: Record<string, string> = {
+  Python: 'var(--chart-1)', SQL: 'var(--chart-2)', Pandas: 'var(--chart-3)', NumPy: 'var(--chart-4)',
+  'Power BI': 'var(--chart-5)', TypeScript: 'var(--chart-6)', JavaScript: 'var(--chart-7)',
+  'React.js': 'var(--chart-2)', 'Next.js': 'var(--chart-3)', Docker: 'var(--chart-4)',
+  PostgreSQL: 'var(--chart-6)', Supabase: 'var(--chart-1)', TensorFlow: 'var(--chart-5)',
+  PyTorch: 'var(--chart-7)', MongoDB: 'var(--chart-2)', 'Hugging Face': 'var(--chart-3)',
 };
 
 export function SkillsExplorer({ groups, projects }: { groups: SkillGroup[]; projects: GitHubProject[] }) {
@@ -124,7 +124,7 @@ export function SkillsExplorer({ groups, projects }: { groups: SkillGroup[]; pro
         return <div key={group.title} className="border-b border-border last:border-b-0">
           <h2><button type="button" id={`${panelId}-button`} aria-expanded={open} aria-controls={panelId} onClick={() => toggleGroup(group.title)} className="flex min-h-12 w-full items-center justify-between gap-2 px-3 py-2 text-left text-[13px] font-medium text-primary hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"><span className="flex min-w-0 items-center gap-2"><span className="shrink-0 font-mono text-[11px] text-accent">{String(groupIndex + 1).padStart(2, '0')}</span><span className="min-w-0 break-words">{group.title}</span></span><span className="flex shrink-0 items-center gap-2 text-xs text-secondary">{group.skills.length}<ChevronDown size={15} className={`transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" /></span></button></h2>
           <div id={panelId} hidden={!open} role="region" aria-labelledby={`${panelId}-button`} className="space-y-3 border-t border-border/60 bg-background/30 p-3">
-            <div className="flex flex-wrap gap-1.5">{group.skills.map((skill) => <span key={skill} className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-border bg-elevated px-2 py-1.5 text-[13px] leading-5 text-primary"><span style={{ color: brandColors[skill] ?? 'var(--accent)' }}><SkillIcon label={skill} size={15} /></span><span className="min-w-0 break-words">{skill}</span></span>)}</div>
+            <div className="flex flex-wrap gap-1.5">{group.skills.map((skill) => <span key={skill} className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-lg border border-border bg-elevated px-2 py-1.5 text-[13px] leading-5 text-primary"><span className="flex shrink-0 items-center" style={{ color: skillIconColors[skill] ?? 'var(--accent)' }}><SkillIcon label={skill} size={15} /></span><span className="min-w-0 break-words">{skill}</span></span>)}</div>
             {projectEvidence.length ? <div className="space-y-1 border-t border-border pt-2"><p className="text-xs text-secondary">Published project references</p>{projectEvidence.slice(0, 6).map(({ skill, project }) => <Link key={`${skill}-${project.name}`} href={`/projects/${encodeURIComponent(project.name)}`} className="flex min-h-11 items-center justify-between gap-2 rounded-lg px-2 text-xs text-accent hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><span className="min-w-0 flex-1 break-words"><span className="font-medium">{skill}</span> · {project.title}</span><ArrowUpRight size={14} className="shrink-0" aria-hidden="true" /></Link>)}</div> : null}
           </div>
         </div>;

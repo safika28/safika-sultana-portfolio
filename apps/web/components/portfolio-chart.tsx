@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { BarChart3 } from 'lucide-react';
 import { projectChartData, type ChartDatum } from '@/lib/analytics-data';
 import type { GitHubProject } from '@/lib/github-projects';
@@ -33,18 +33,20 @@ export function AnalyticsBarChart({ data, label, onSelect, height = 240 }: {
       className="min-w-0" style={{ height, width: '100%' }}>
       <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <BarChart data={data} layout="vertical" margin={{ top: 4, right: 18, bottom: 4, left: 0 }} accessibilityLayer>
-          <CartesianGrid stroke="var(--dashboard-border, #25344C)" horizontal={false} strokeDasharray="3 4" />
-          <XAxis type="number" allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: 'var(--dashboard-muted, #94A3B8)', fontSize: 11 }} />
+          <CartesianGrid stroke="var(--dashboard-border, #1F3A2D)" horizontal={false} strokeDasharray="3 4" />
+          <XAxis type="number" allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: 'var(--dashboard-muted, #A2B8AA)', fontSize: 11 }} />
           <YAxis type="category" dataKey="label" width={112} tickLine={false} axisLine={false}
-            tick={{ fill: 'var(--dashboard-muted, #94A3B8)', fontSize: 11 }}
+            tick={{ fill: 'var(--dashboard-muted, #A2B8AA)', fontSize: 11 }}
             tickFormatter={(value: string) => value.length > 17 ? `${value.slice(0, 15)}…` : value} />
-          <Tooltip cursor={{ fill: 'rgba(34,211,238,0.07)' }}
-            contentStyle={{ background: 'var(--dashboard-elevated, #17243B)', border: '1px solid var(--dashboard-border, #25344C)', borderRadius: 10, color: 'var(--dashboard-text, #F8FAFC)', fontSize: 12 }}
-            labelStyle={{ color: 'var(--dashboard-text, #F8FAFC)' }}
+          <Tooltip cursor={{ fill: 'rgb(var(--color-accent, 52 211 153) / 0.08)' }}
+            contentStyle={{ background: 'var(--dashboard-elevated, #153426)', border: '1px solid var(--dashboard-border, #1F3A2D)', borderRadius: 10, color: 'var(--dashboard-text, #F0FDF4)', fontSize: 12 }}
+            labelStyle={{ color: 'var(--dashboard-text, #F0FDF4)' }}
             formatter={(value: number) => [value, 'Records']} />
-          <Bar dataKey="count" fill="var(--accent, #22D3EE)" radius={[0, 5, 5, 0]} maxBarSize={24}
+          <Bar dataKey="count" fill="var(--accent, #34D399)" radius={[0, 5, 5, 0]} maxBarSize={24}
             isAnimationActive={!reducedMotion} animationDuration={180}
-            onClick={(entry: ChartDatum) => onSelect?.(entry.label)} />
+            onClick={(entry: ChartDatum) => onSelect?.(entry.label)}>
+            {data.map((entry, index) => <Cell key={entry.label} fill={`var(--chart-${index % 7 + 1}, #34D399)`} />)}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>

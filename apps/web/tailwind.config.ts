@@ -12,6 +12,9 @@ const config: Config = {
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
         'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+        mint: 'rgb(var(--color-mint) / <alpha-value>)',
+        leaf: 'rgb(var(--color-leaf) / <alpha-value>)',
+        sage: 'rgb(var(--color-sage) / <alpha-value>)',
         border: 'rgb(var(--color-border) / <alpha-value>)',
         danger: 'rgb(var(--color-danger) / <alpha-value>)',
         success: 'rgb(var(--color-success) / <alpha-value>)'
