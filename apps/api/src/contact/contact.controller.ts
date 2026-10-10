@@ -53,7 +53,7 @@ export class ContactController {
       const limit = await db.rpc('consume_contact_limit', { client_hash: clientHash });
       if (limit.error) throw new ServiceUnavailableException('Messaging is temporarily unavailable.');
       if (limit.data !== true) throw new HttpException('Please wait 10 minutes before sending another message.', HttpStatus.TOO_MANY_REQUESTS);
-      const { error } = await db.from('inquiries').insert({ name: body.name, email: body.email, subject: body.subject || 'Portfolio inquiry', message: body.message });
+      const { error } = await db.from('portfolio_inquiries').insert({ name: body.name, email: body.email, subject: body.subject || 'Portfolio inquiry', message: body.message });
       if (error) throw new ServiceUnavailableException('Your message could not be saved. Please try email.');
       return { status: 'received', message: 'Your inquiry has been saved for review.' };
     } catch (error) {

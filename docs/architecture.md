@@ -6,11 +6,11 @@ The Next.js App Router application in `apps/web` serves the public dashboard and
 
 `lib/portfolio-data.ts` merges the owner's supplied profile and skills with cached public GitHub repository metadata and published Supabase content. API outages fall back to a dated repository inventory; missing metadata stays unavailable. Scope categories are editorial labels and do not imply completed work. No visitor traffic or model accuracy is fabricated.
 
-Supabase's `content_records` stores validated drafts and published content by section. Public reads include only published valid records. Legacy tables and rows remain intact. Real metrics include a dataset and methodology. The listed toolkit is not a certification or proficiency score.
+Supabase's `portfolio_content_records` stores validated drafts and published content by section. Public reads include only published valid records. Legacy tables and rows remain intact. Real metrics include a dataset and methodology. The listed toolkit is not a certification or proficiency score.
 
 ## Authorization and messaging
 
-The CMS checks bearer tokens using Supabase Auth and then reads the protected database role on every request. Editors can manage portfolio content and message status; homepage settings require `super_admin`. Clients cannot assign themselves a role. Private drafts and inquiries are protected by RLS. Server-only modules use the service key after request authorization; it is never sent to browsers.
+The CMS checks bearer tokens using Supabase Auth and then reads the protected database role on every request. Editors can manage portfolio content and message status; homepage settings require `super_admin`. Clients cannot assign themselves a role. Private drafts and inquiries are protected by RLS. CMS requests use verified user tokens and RLS; optional server operations may use a private service key. Password authentication runs in an isolated Supabase Edge Function. Protected portfolio roles are never taken from user metadata.
 
 Contact input has length and JSON body limits, validation, a honeypot, and process-local plus atomic database throttling. Only a successful inquiry insertion returns success. Missing configuration or storage failures produce an unavailable response with direct email alternatives.
 

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { RequestLimiter } from './contact-validation';
+import { getPublicDatabase } from './supabase-server';
 
 export const cmsSections = ['profile', 'skills', 'projects', 'experience', 'education', 'certifications', 'posts', 'settings'] as const;
 export type CmsSection = typeof cmsSections[number];
@@ -42,12 +43,12 @@ export function getServerDatabase() {
 export async function authorizeAdmin(request: Request) {
   const header = request.headers.get('authorization') || '';
   if (!header.startsWith('Bearer ') || header.length > 10_000) throw new CmsError(401, 'Sign in to continue.');
-  const db = getServerDatabase();
+  const db = getServerDatabase() || getPublicDatabase(header.slice(7));
   if (!db) throw new CmsError(503, 'The content service is not configured.');
   const { data, error } = await db.auth.getUser(header.slice(7));
-  if (error || !data.user) throw new CmsError(401, 'Your session has expired. Sign in again.');
+  if (error || !data.user?.email_confirmed_at) throw new CmsError(401, 'Sign in with a verified email to continue.');
   // Role is read afresh from a protected table; user-editable metadata is never trusted.
-  const role = await db.from('profiles').select('role').eq('user_id', data.user.id).maybeSingle();
+  const role = await db.from('portfolio_profiles').select('role').eq('user_id', data.user.id).maybeSingle();
   if (role.error) throw new CmsError(503, 'The content service is unavailable.');
   if (!role.data || !['super_admin', 'editor'].includes(role.data.role)) throw new CmsError(403, 'This account has no content editing access.');
   return { db, userId: data.user.id, role: role.data.role as string };
@@ -55,7 +56,16 @@ export async function authorizeAdmin(request: Request) {
 
 export function checkSameOrigin(request: Request) {
   const origin = request.headers.get('origin');
-  if (origin && origin !== new URL(request.url).origin) throw new CmsError(403, 'This request origin is not allowed.');
+  if (!origin) return;
+  const requestUrl = new URL(request.url);
+  const host = request.headers.get('host');
+  // Next can normalize a loopback request URL while retaining the real browser Host.
+  // The browser cannot choose a different Host header for a cross-origin request.
+  let browserOrigin = requestUrl.origin;
+  if (host && /^[a-z\d.[\]:-]+$/i.test(host)) {
+    try { browserOrigin = new URL(`${requestUrl.protocol}//${host}`).origin; } catch { /* Fall back to the parsed request URL. */ }
+  }
+  if (origin !== requestUrl.origin && origin !== browserOrigin) throw new CmsError(403, 'This request origin is not allowed.');
 }
 
 export async function readJsonBody(request: Request, maxBytes = 80_000): Promise<unknown> {
@@ -93,10 +103,10 @@ type PublicRecord = Record<string, unknown>;
 export type PortfolioContent = { profile: PublicRecord | null; skills: { title: string; skills: string[] }[]; projects: PublicRecord[]; experience: PublicRecord[]; education: PublicRecord[]; certifications: PublicRecord[]; posts: PublicRecord[]; settings: PublicRecord | null; source: 'database' | 'unconfigured' | 'unavailable' };
 export async function getPortfolioContent(): Promise<PortfolioContent> {
   const empty: PortfolioContent = { profile: null, skills: [], projects: [], experience: [], education: [], certifications: [], posts: [], settings: null, source: 'unconfigured' };
-  const db = getServerDatabase();
+  const db = getServerDatabase() || getPublicDatabase();
   if (!db) return empty;
   try {
-    const { data, error } = await db.from('content_records').select('id,section,payload').eq('published', true).order('position').limit(500);
+    const { data, error } = await db.from('portfolio_content_records').select('id,section,payload').eq('published', true).order('position').limit(500);
     if (error) return { ...empty, source: 'unavailable' };
     const result: PortfolioContent = { ...empty, source: 'database' };
     for (const record of data || []) {
@@ -121,7 +131,7 @@ export async function enforceContactLimit(request: Request, db: NonNullable<Retu
   const secret = process.env.CONTACT_RATE_LIMIT_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const key = createHash('sha256').update(secret).update(ip.slice(0, 100)).digest('hex');
   if (!limiter.consume(key)) throw new CmsError(429, 'Please wait 10 minutes before sending another message.');
-  const { data, error } = await db.rpc('consume_contact_limit', { client_hash: key });
+  const { data, error } = await db.rpc('portfolio_consume_contact_limit', { client_hash: key });
   if (error) throw new CmsError(503, 'Messaging is temporarily unavailable. Please use email.');
   if (data !== true) throw new CmsError(429, 'Please wait 10 minutes before sending another message.');
 }

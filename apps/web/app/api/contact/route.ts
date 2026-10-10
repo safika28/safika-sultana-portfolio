@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     if (!db) throw new CmsError(503, 'Messaging is not connected yet. Please email safikasultana90@gmail.com.');
     await enforceContactLimit(request, db);
     const { website: _website, ...message } = input.data;
-    const { error } = await db.from('inquiries').insert(message);
+    const { error } = await db.from('portfolio_inquiries').insert(message);
     if (error) throw new CmsError(503, 'Your message could not be saved. Please try email instead.');
     return Response.json({ message: 'Your message has been saved. Thank you for reaching out.' }, { status: 201, headers: { 'Cache-Control': 'no-store' } });
   } catch (error) { return apiError(error); }

@@ -23,5 +23,6 @@ jobs:
       - run: npm run lint
       - run: npx tsc --noEmit --incremental false -p apps/web/tsconfig.json
       - run: node --test apps/web/test/*.test.cjs
+      - run: node --test database/test/*.test.cjs
       - run: npm test
       - run: npm run build

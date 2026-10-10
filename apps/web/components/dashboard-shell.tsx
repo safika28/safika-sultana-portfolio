@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Activity, ArrowUpRight, BookOpen, BriefcaseBusiness, ChartNoAxesCombined, ChevronRight, Code2, Ellipsis, FolderGit2, GraduationCap, House, Mail, Moon, Search, ShieldCheck, Sun, UserRound, X } from 'lucide-react';
+import { AuthStatus } from './auth-status';
 
 const primary = [
   { href: '/', label: 'Home', icon: House }, { href: '/projects', label: 'Projects', icon: FolderGit2 },
@@ -17,7 +18,7 @@ const secondary = [
   { href: '/blog', label: 'Research & notes', icon: BookOpen },
 ];
 
-export function DashboardShell({ children, footer, name, workspaceTitle, navigation }: { children: ReactNode; footer: ReactNode; name: string; workspaceTitle:string; navigation: {label:string;href:string}[] }) {
+export function DashboardShell({ children, footer, name, workspaceTitle, navigation, auth }: { children: ReactNode; footer: ReactNode; name: string; workspaceTitle:string; navigation: {label:string;href:string}[]; auth: {url:string|null; publicKey:string|null} }) {
   const pathname = usePathname();
   const router = useRouter();
   const [theme, setTheme] = useState('dark');
@@ -26,7 +27,7 @@ export function DashboardShell({ children, footer, name, workspaceTitle, navigat
   const menuButton = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const current = [...primary, ...secondary].find((item) => item.href === '/' ? pathname === '/' : pathname.startsWith(item.href));
-  const title = current?.label || (pathname.startsWith('/admin') ? 'Content studio' : 'Workspace');
+  const title = current?.label || (pathname.startsWith('/admin') ? 'Content studio' : pathname === '/login' ? 'Sign in' : pathname === '/register' ? 'Create account' : pathname === '/account' ? 'Account' : 'Workspace');
   const extraNavigation = navigation.filter((item) => ![...primary,...secondary].some((existing) => existing.href === item.href));
 
   useEffect(() => { setTheme(document.documentElement.dataset.theme || 'dark'); }, []);
@@ -77,6 +78,7 @@ export function DashboardShell({ children, footer, name, workspaceTitle, navigat
         <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-2 px-3 sm:px-5 lg:px-6">
           <div className="flex min-w-0 items-center gap-2"><Link href="/" aria-label={`${name} home`} className="flex min-h-11 w-11 items-center justify-center lg:hidden"><Image src="/logo.png" alt="" width={32} height={32} sizes="32px" className="h-8 w-8 rounded-lg border border-border object-cover" /></Link><div><p className="hidden text-[10px] text-secondary lg:block">Safika / workspace</p><span className="text-sm font-semibold">{title}</span></div></div>
           <div className="flex items-center gap-1.5">
+            <AuthStatus {...auth} />
             <form className="relative hidden lg:block" role="search" onSubmit={(event) => { event.preventDefault(); const query = String(new FormData(event.currentTarget).get('q') || '').trim(); router.push(`/projects${query ? `?q=${encodeURIComponent(query)}` : ''}`); }}><Search size={14} aria-hidden="true" className="absolute left-3 top-[15px] text-secondary" /><input name="q" type="search" aria-label="Search portfolio projects" placeholder="Search projects…" maxLength={120} className="h-11 w-56 rounded-lg border border-border bg-surface pl-9 pr-3 text-xs" /></form>
             <button type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-surface">{theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}</button>
             <div className="relative lg:hidden"><button ref={menuButton} type="button" onClick={() => setMenuOpen(!menuOpen)} aria-label="More profile pages" aria-expanded={menuOpen} aria-controls="secondary-navigation" className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-surface">{menuOpen ? <X size={19} aria-hidden="true" /> : <Ellipsis size={19} aria-hidden="true" />}</button>

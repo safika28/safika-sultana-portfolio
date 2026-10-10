@@ -12,8 +12,8 @@ export class PortfolioService {
       source = 'unavailable';
       try {
         const [projects, posts] = await Promise.all([
-          db.from('content_records').select('id', { count: 'exact', head: true }).eq('published', true).eq('section', 'projects'),
-          db.from('content_records').select('id', { count: 'exact', head: true }).eq('published', true).eq('section', 'posts')
+          db.from('portfolio_content_records').select('id', { count: 'exact', head: true }).eq('published', true).eq('section', 'projects'),
+          db.from('portfolio_content_records').select('id', { count: 'exact', head: true }).eq('published', true).eq('section', 'posts')
         ]);
         if (!projects.error && !posts.error) { metrics = { publishedProjects: projects.count || 0, publishedPosts: posts.count || 0 }; source = 'database'; }
       } catch { /* Keep a truthful unavailable state. */ }

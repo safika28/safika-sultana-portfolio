@@ -11,5 +11,8 @@
     "lint": "npm run lint --workspace web",
     "test": "npm run test --workspace api -- --runInBand"
   },
-  "packageManager": "npm@10.9.2"
+  "packageManager": "npm@10.9.2",
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
 }

@@ -1,6 +1,8 @@
 'use client';
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createClient, type Session } from '@supabase/supabase-js';
+import type { Session } from '@supabase/supabase-js';
+import Link from 'next/link';
+import { getBrowserSupabaseClient } from '@/lib/supabase-browser';
 import { Database, LogOut, Plus, Save, ShieldCheck, Trash2 } from 'lucide-react';
 import { CmsFields, normalizeEditorPayload } from './cms-fields';
 
@@ -30,9 +32,10 @@ const fieldHelp: Record<Section, string> = {
 };
 
 export function AdminConsole({ url, publicKey, configured }: { url: string | null; publicKey: string | null; configured: boolean }) {
-  const client = useMemo(() => url && publicKey ? createClient(url, publicKey) : null, [url, publicKey]);
+  const client = useMemo(() => getBrowserSupabaseClient(url, publicKey), [url, publicKey]);
   const [session, setSession] = useState<Session | null>(null);
   const activeToken = useRef<string | null>(null);
+  const sessionUser = useRef<string | null>(null);
   const [records, setRecords] = useState<ContentRecord[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [role, setRole] = useState('');
@@ -54,25 +57,26 @@ export function AdminConsole({ url, publicKey, configured }: { url: string | nul
   const load = useCallback(async () => {
     setLoading(true);
     try { const token = session?.access_token; const result = await request('/api/admin/content'); if (activeToken.current !== token) return; setRecords(result.records); setMessages(result.messages); setRole(result.role); }
-    catch (error) { setNotice(error instanceof Error ? error.message : 'Content could not be loaded.'); }
-    finally { setLoading(false); }
+    catch (error) { if (activeToken.current === session?.access_token) { setRecords([]); setMessages([]); setRole(''); setNotice(error instanceof Error ? error.message : 'Content could not be loaded.'); } }
+    finally { if (activeToken.current === session?.access_token) setLoading(false); }
   }, [request, session]);
   useEffect(() => {
     if (!client) return;
     let active = true;
-    client.auth.getSession().then(({ data }) => { if (active) { activeToken.current = data.session?.access_token || null; setSession(data.session); } });
-    const { data } = client.auth.onAuthStateChange((_event, nextSession) => { activeToken.current = nextSession?.access_token || null; setSession(nextSession); if (!nextSession) { setRecords([]); setMessages([]); setRole(''); } });
+    let receivedEvent = false;
+    const updateSession = (nextSession: Session | null) => {
+      if (!active) return;
+      if (nextSession?.user.id !== sessionUser.current) { setRecords([]); setMessages([]); setRole(''); setSelected(null); setPayload(JSON.stringify(templates.profile, null, 2)); setNotice(''); }
+      sessionUser.current = nextSession?.user.id || null;
+      activeToken.current = nextSession?.access_token || null; setSession(nextSession);
+    };
+    const { data } = client.auth.onAuthStateChange((_event, nextSession) => { receivedEvent = true; updateSession(nextSession); });
+    void client.auth.getSession().then(({ data: result }) => { if (!receivedEvent) updateSession(result.session); }).catch(() => { if (!receivedEvent) updateSession(null); });
     return () => { active = false; data.subscription.unsubscribe(); };
   }, [client]);
   useEffect(() => { if (session) void load(); }, [session, load]);
   function selectRecord(record: ContentRecord | null, nextSection = section) {
     setSelected(record); setSection(nextSection); setPayload(JSON.stringify(record?.payload || templates[nextSection], null, 2)); setPublished(record?.published || false); setPosition(record?.position || 0); setNotice('');
-  }
-  async function signIn(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (!client) return;
-    const form = event.currentTarget; const data = new FormData(form); setBusy(true); setNotice('');
-    try { const { error } = await client.auth.signInWithPassword({ email: String(data.get('email')), password: String(data.get('password')) }); if (error) throw new Error('Sign-in failed. Check your credentials.'); form.reset(); }
-    catch (error) { setNotice(error instanceof Error ? error.message : 'Sign-in failed.'); } finally { setBusy(false); }
   }
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setNotice('');
@@ -94,10 +98,10 @@ export function AdminConsole({ url, publicKey, configured }: { url: string | nul
     catch (error) { setNotice(error instanceof Error ? error.message : 'The message could not be updated.'); } finally { setBusy(false); }
   }
   const inputClass = 'min-h-11 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20';
-  if (!configured || !client) return <section className="panel space-y-3 p-4"><ShieldCheck className="text-accent" size={24} aria-hidden="true" /><h2 className="text-lg font-semibold">Secure CMS setup</h2><p className="text-sm text-secondary">Administrator access will be available after Supabase Auth and the database are connected. This page does not grant editing access to public visitors.</p><p className="text-sm text-secondary">Setup instructions are included in docs/cms-setup.md.</p></section>;
+  if (!configured || !client) return <section className="panel space-y-3 p-4"><ShieldCheck className="text-accent" size={24} aria-hidden="true" /><h2 className="text-lg font-semibold">Content studio is temporarily unavailable</h2><p className="text-sm text-secondary">Please try again later.</p></section>;
   return <div className="space-y-4">
     {notice && <p role="status" className="panel break-words p-3 text-sm">{notice}</p>}
-    {!session ? <form onSubmit={signIn} className="panel max-w-md space-y-4 p-4"><div className="flex items-center gap-2"><ShieldCheck size={20} className="text-accent" aria-hidden="true" /><h2 className="text-lg font-semibold">Administrator sign-in</h2></div><p className="text-sm text-secondary">Use your approved administrator account. Registration is managed in Supabase.</p><div><label htmlFor="admin-email" className="mb-1 block text-sm">Email</label><input id="admin-email" name="email" type="email" autoComplete="username" required disabled={busy} className={inputClass} /></div><div><label htmlFor="admin-password" className="mb-1 block text-sm">Password</label><input id="admin-password" name="password" type="password" autoComplete="current-password" required disabled={busy} className={inputClass} /></div><button disabled={busy} className="button-primary min-h-11 px-4">{busy ? 'Signing in…' : 'Sign in'}</button></form> : <>
+    {!session ? <section className="panel max-w-md space-y-4 p-4"><ShieldCheck size={22} className="text-accent" aria-hidden="true" /><h2 className="text-lg font-semibold">Administrator access</h2><p className="text-sm text-secondary">Sign in with your approved account to manage portfolio content.</p><Link href="/login?next=%2Fadmin" className="button-primary">Sign in</Link><Link href="/register" className="button-secondary">Create account</Link></section> : <>
       <div className="panel flex flex-wrap items-center justify-between gap-3 p-3"><p className="text-sm text-secondary">{session.user.email}{role && <span className="ml-2 chip">{role}</span>}</p><button type="button" className="button-secondary inline-flex min-h-11 items-center gap-2 px-3" onClick={() => { void client.auth.signOut(); }}><LogOut size={15} aria-hidden="true" />Sign out</button></div>
       {loading && <p role="status" className="text-sm text-secondary">Loading saved content…</p>}
       {role && <><div className="flex flex-wrap gap-2" role="group" aria-label="Content sections">{sections.map((item) => <button key={item} type="button" aria-pressed={item === section} className={`${item === section ? 'button-primary' : 'button-secondary'} min-h-11 px-3 capitalize`} onClick={() => selectRecord(null, item)}>{item}</button>)}</div>

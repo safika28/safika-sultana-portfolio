@@ -70,7 +70,7 @@ test('admin access requires a valid Auth user and protected database role', asyn
   database = { auth: { getUser: async () => ({ data: { user: null }, error: new Error('expired') }) } };
   await assert.rejects(() => authorizeAdmin(authRequest()), { status: 401 });
   let readUserId;
-  const makeDb = (role) => ({ auth: { getUser: async () => ({ data: { user: { id: 'real-user', user_metadata: { role: 'super_admin' } } }, error: null }) }, from: () => ({ select: () => ({ eq: (_field, value) => { readUserId = value; return { maybeSingle: async () => ({ data: { role }, error: null }) }; } }) }) });
+  const makeDb = (role) => ({ auth: { getUser: async () => ({ data: { user: { id: 'real-user', email_confirmed_at: '2026-10-11', user_metadata: { role: 'super_admin' } } }, error: null }) }, from: () => ({ select: () => ({ eq: (_field, value) => { readUserId = value; return { maybeSingle: async () => ({ data: { role }, error: null }) }; } }) }) });
   database = makeDb('viewer');
   await assert.rejects(() => authorizeAdmin(authRequest()), { status: 403 });
   database = makeDb('editor');
@@ -83,8 +83,10 @@ test('durable limiter fails closed when the database rejects a request', async (
 });
 test('unconfigured CMS returns empty records, with no fabricated analytics', async () => {
   delete process.env.SUPABASE_URL; delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.NEXT_PUBLIC_SUPABASE_URL = '';
   const content = await getPortfolioContent();
   assert.equal(content.source, 'unconfigured'); assert.deepEqual(content.projects, []); assert.deepEqual(content.experience, []);
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
   process.env.SUPABASE_URL = 'https://example.supabase.co'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-only-key';
 });
 test('public CMS reads only published records and drops schema-invalid payloads', async () => {
@@ -125,7 +127,7 @@ test('Next contact route rejects invalid input and a exhausted durable limit', a
   assert.equal(response.status, 429); assert.equal(response.headers.get('Retry-After'), '600');
 });
 function adminDatabase(role) {
-  return { auth: { getUser: async () => ({ data: { user: { id: 'approved-user' } }, error: null }) }, from: (table) => table === 'profiles' ? { select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { role }, error: null }) }) }) } : { select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { section: 'settings' }, error: null }) }) }) } };
+  return { auth: { getUser: async () => ({ data: { user: { id: 'approved-user', email_confirmed_at: '2026-10-11' } }, error: null }) }, from: (table) => table === 'portfolio_profiles' ? { select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { role }, error: null }) }) }) } : { select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { section: 'settings' }, error: null }) }) }) } };
 }
 test('CMS mutation routes enforce roles, schemas, and settings permissions', async () => {
   let response = await contentRoute.POST(jsonRequest('http://localhost/api/admin/content', {}));
